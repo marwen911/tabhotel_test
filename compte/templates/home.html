@@ -1,0 +1,98 @@
+{% extends "base.html"%}
+    {% block content %}
+        {% if user.is_authenticated %}
+		{{ user.username }}
+        <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+        hello
+        {% endif %}
+        <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block mt-2">Add link</button>
+        </form>
+        {% for link in list_lik %}
+            <a href="{% url 'link' link.id %}">link {{ link.id }}</a>
+        {% endfor %}
+        <script>
+                var N=new Array();
+                var i=0;
+                var T=new Array();
+                {% for k in link %}
+                    T[i]={{ k.id }}
+                    N[i]={{ k.nbr_vu }}
+                    i++;
+                {% endfor %}
+        </script>
+        <script>
+         var changed;
+    do{
+        changed = false;
+        for(var i=0; i < T.length-1; i++) {
+            if(T[i] > T[i+1]) {
+                var tmp = T[i];
+                var tmp2=N[i];
+                T[i] = T[i+1];
+                N[i]=N[i+1];
+                T[i+1] = tmp;
+                N[i+1]=tmp2;
+                changed = true;
+            }
+        }
+    } while(changed);
+        </script>
+        <script>
+        console.log(T.length);
+        str1="link ";
+         for (i=0; i<T.length;i++){
+              T[i]=str1.concat('',T[i].toString());
+
+         }
+        </script>
+
+
+
+
+
+          <canvas id="myChart" width="100" height="35"></canvas>
+    <script>
+         var label=[]
+         var donne=[]
+    const ctx = document.getElementById('myChart').getContext('2d');
+       for (i=0;i<T.length;i++)
+    {
+        label.push(T[i]);
+        donne.push(N[i]);
+
+    }
+
+    const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: label,
+        datasets: [{
+            label: 'number of view',
+            data: donne,
+
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+    </script>
+    {% endblock %}
